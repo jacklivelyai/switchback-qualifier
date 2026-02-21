@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Switch Back — A Tom Keeler Novella | Jack Lively</title>
+
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '522577298628370');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=522577298628370&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Playfair+Display:wght@700;900&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
@@ -316,14 +334,23 @@
     </div>
 
     <script>
-        // MailerLite integration placeholder
-        // The other agent will wire this to the MailerLite API with the qualifier tag.
-        // For now: logs to console locally, ready for API endpoint swap.
+        // Track when visitor scrolls to the signup form (read the excerpt)
+        const signupSection = document.getElementById('signupForm');
+        let scrollTracked = false;
+        const scrollObserver = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting && !scrollTracked) {
+                scrollTracked = true;
+                fbq('trackCustom', 'ExcerptRead');
+                scrollObserver.disconnect();
+            }
+        }, { threshold: 0.5 });
+        scrollObserver.observe(document.querySelector('.signup-section'));
 
         const form = document.getElementById('signupForm');
         const emailInput = document.getElementById('emailInput');
         const submitBtn = document.getElementById('submitBtn');
         const message = document.getElementById('signupMessage');
+        const adVariant = new URLSearchParams(window.location.search).get('v') || null;
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -340,12 +367,13 @@
                 const response = await fetch('/.netlify/functions/subscribe', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
+                    body: JSON.stringify({ email: email, variant: adVariant })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
+                    fbq('track', 'Lead');
                     message.textContent = "You're in! Check your inbox for Switch Back.";
                     message.className = 'signup-message success';
                     emailInput.value = '';

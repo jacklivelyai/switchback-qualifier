@@ -3,10 +3,11 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  let email;
+  let email, variant;
   try {
     const body = JSON.parse(event.body);
     email = body.email;
+    variant = body.variant || null;
   } catch {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) };
   }
@@ -28,7 +29,8 @@ exports.handler = async (event) => {
     },
     body: JSON.stringify({
       email: email,
-      groups: ['180021804830558048']
+      groups: ['180021804830558048'],
+      ...(variant && { fields: { ad_variant: variant } })
     })
   });
 

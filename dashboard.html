@@ -95,6 +95,42 @@
             background-color: rgba(255, 255, 255, 0.12);
         }
 
+        /* Link bar */
+        .link-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .link-bar-label {
+            font-size: 0.8rem;
+            color: #6b8fa3;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .link-pill {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #3fa7d6;
+            background: rgba(63, 167, 214, 0.1);
+            border: 1px solid rgba(63, 167, 214, 0.2);
+            text-decoration: none;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .link-pill:hover {
+            background: rgba(63, 167, 214, 0.2);
+            border-color: rgba(63, 167, 214, 0.4);
+        }
+
         /* Health bar */
         .health-bar {
             display: none;
@@ -375,6 +411,12 @@
         <div class="controls">
             <button class="btn btn-primary" id="testBtn" onclick="runTest()">Test Everything</button>
             <button class="btn btn-secondary" id="refreshBtn" onclick="loadStats()">Refresh</button>
+        </div>
+
+        <div class="link-bar">
+            <span class="link-bar-label">Landing Pages:</span>
+            <a href="https://switchback-qualifier.netlify.app/?v=1" target="_blank" class="link-pill">V3 Ad — ?v=1</a>
+            <a href="https://switchback-qualifier.netlify.app/?v=2" target="_blank" class="link-pill">V7 Ad — ?v=2</a>
         </div>
 
         <div class="health-bar" id="healthBar"></div>

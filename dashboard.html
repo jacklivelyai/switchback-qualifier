@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Switch Back Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d1f2d;
+            color: #d4dce4;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        /* Header */
+        .dash-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .dash-header h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+        }
+
+        .dash-header p {
+            color: #6b8fa3;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: #1a6b8a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #238aad;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #8ab4c8;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Health bar */
+        .health-bar {
+            display: none;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 28px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .health-bar.visible {
+            display: flex;
+        }
+
+        .health-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .health-pill.pass {
+            background: rgba(92, 201, 142, 0.15);
+            color: #5cc98e;
+        }
+
+        .health-pill.fail {
+            background: rgba(224, 112, 112, 0.15);
+            color: #e07070;
+        }
+
+        .health-pill .icon {
+            font-size: 0.9rem;
+        }
+
+        /* Cards grid */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card .label {
+            font-size: 0.8rem;
+            color: #6b8fa3;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .card .value {
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .card .sub {
+            font-size: 0.85rem;
+            color: #6b8fa3;
+            margin-top: 4px;
+        }
+
+        /* Table */
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #3fa7d6;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .table-wrap {
+            margin-bottom: 28px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 10px 14px;
+            color: #6b8fa3;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tbody td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #d4dce4;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        td.num {
+            text-align: right;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        th.num {
+            text-align: right;
+        }
+
+        /* Automation card */
+        .auto-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+
+        .auto-card .auto-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge.active {
+            background: rgba(92, 201, 142, 0.15);
+            color: #5cc98e;
+        }
+
+        .badge.disabled {
+            background: rgba(224, 112, 112, 0.15);
+            color: #e07070;
+        }
+
+        .badge.broken {
+            background: rgba(224, 112, 112, 0.25);
+            color: #ff6b6b;
+        }
+
+        .auto-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .auto-stat {
+            text-align: center;
+        }
+
+        .auto-stat .stat-val {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .auto-stat .stat-label {
+            font-size: 0.75rem;
+            color: #6b8fa3;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Warning */
+        .warning {
+            display: none;
+            background: rgba(224, 176, 60, 0.1);
+            border: 1px solid rgba(224, 176, 60, 0.25);
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            color: #e0b03c;
+            font-size: 0.9rem;
+        }
+
+        .warning.visible {
+            display: block;
+        }
+
+        /* Footer */
+        .dash-footer {
+            text-align: center;
+            color: #4a6a7a;
+            font-size: 0.8rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            color: #6b8fa3;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3fa7d6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-msg {
+            text-align: center;
+            color: #e07070;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .auto-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard {
+                padding: 24px 16px 40px;
+            }
+
+            .dash-header h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header class="dash-header">
+            <h1>Switch Back Dashboard</h1>
+            <p>A/B Test Monitor</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="testBtn" onclick="runTest()">Test Everything</button>
+            <button class="btn btn-secondary" id="refreshBtn" onclick="loadStats()">Refresh</button>
+        </div>
+
+        <div class="health-bar" id="healthBar"></div>
+
+        <div id="content">
+            <div class="loading" id="loadingMsg">
+                <span class="spinner"></span> Loading dashboard...
+            </div>
+        </div>
+
+        <footer class="dash-footer" id="footer">
+            Last refreshed: never
+        </footer>
+    </div>
+
+    <script>
+        const API = '/.netlify/functions/dashboard-api';
+        let refreshTimer = null;
+
+        async function loadStats() {
+            const content = document.getElementById('content');
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = 'LOADING...';
+
+            try {
+                const res = await fetch(`${API}?action=stats`);
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error || 'API error');
+
+                renderStats(data);
+                document.getElementById('footer').textContent =
+                    'Last refreshed: ' + new Date(data.fetchedAt).toLocaleTimeString();
+            } catch (err) {
+                content.innerHTML = `<div class="error-msg">Failed to load stats: ${esc(err.message)}</div>`;
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'REFRESH';
+            }
+
+            // Reset auto-refresh timer
+            clearInterval(refreshTimer);
+            refreshTimer = setInterval(loadStats, 60000);
+        }
+
+        function renderStats(data) {
+            const content = document.getElementById('content');
+            const variants = data.variants || {};
+            const variantKeys = Object.keys(variants).sort();
+            const knownKeys = variantKeys.filter(k => k !== 'unknown');
+            const hasUnknown = variantKeys.includes('unknown');
+
+            // Build subscriber cards
+            let cardsHTML = `
+                <div class="cards">
+                    <div class="card">
+                        <div class="label">Total Subscribers</div>
+                        <div class="value">${data.total}</div>
+                    </div>`;
+
+            for (const key of knownKeys) {
+                const v = variants[key];
+                cardsHTML += `
+                    <div class="card">
+                        <div class="label">${esc(key)}</div>
+                        <div class="value">${v.count}</div>
+                        <div class="sub">${v.percentage}%</div>
+                    </div>`;
+            }
+
+            cardsHTML += '</div>';
+
+            // Unknown warning
+            let warningHTML = '';
+            if (hasUnknown) {
+                const u = variants.unknown;
+                warningHTML = `
+                    <div class="warning visible">
+                        ${u.count} subscriber${u.count !== 1 ? 's' : ''} with no ad variant tag (${u.percentage}% of total).
+                        These may be direct signups or test entries.
+                    </div>`;
+            }
+
+            // Engagement table
+            let tableHTML = '';
+            if (data.total > 0) {
+                tableHTML = `
+                    <div class="section-title">Engagement by Variant</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variant</th>
+                                    <th class="num">Count</th>
+                                    <th class="num">Sent</th>
+                                    <th class="num">Opens</th>
+                                    <th class="num">Open Rate</th>
+                                    <th class="num">Clicks</th>
+                                    <th class="num">Click Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                for (const key of variantKeys) {
+                    const v = variants[key];
+                    tableHTML += `
+                                <tr>
+                                    <td>${esc(key)}</td>
+                                    <td class="num">${v.count}</td>
+                                    <td class="num">${v.sent}</td>
+                                    <td class="num">${v.opened}</td>
+                                    <td class="num">${v.openRate}%</td>
+                                    <td class="num">${v.clicked}</td>
+                                    <td class="num">${v.clickRate}%</td>
+                                </tr>`;
+                }
+
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>`;
+            }
+
+            // Automation card
+            const a = data.automation;
+            let statusBadge = '';
+            if (a.broken) {
+                statusBadge = '<span class="badge broken">Broken</span>';
+            } else if (a.enabled) {
+                statusBadge = '<span class="badge active">Active</span>';
+            } else {
+                statusBadge = '<span class="badge disabled">Disabled</span>';
+            }
+
+            const autoHTML = `
+                <div class="section-title">Automation</div>
+                <div class="auto-card">
+                    <div class="auto-header">
+                        ${statusBadge}
+                        <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
+                    </div>
+                    <div class="auto-stats">
+                        <div class="auto-stat">
+                            <div class="stat-val">${a.sent}</div>
+                            <div class="stat-label">Emails Sent</div>
+                        </div>
+                        <div class="auto-stat">
+                            <div class="stat-val">${a.openRate}%</div>
+                            <div class="stat-label">Open Rate</div>
+                        </div>
+                        <div class="auto-stat">
+                            <div class="stat-val">${a.clickRate}%</div>
+                            <div class="stat-label">Click Rate</div>
+                        </div>
+                        <div class="auto-stat">
+                            <div class="stat-val">${a.queue_count}</div>
+                            <div class="stat-label">In Queue</div>
+                        </div>
+                        <div class="auto-stat">
+                            <div class="stat-val">${a.completed_count}</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+                </div>`;
+
+            let emptyMsg = '';
+            if (data.total === 0) {
+                emptyMsg = '<div class="loading">No subscribers yet. Stats will appear once signups start coming in.</div>';
+            }
+
+            content.innerHTML = cardsHTML + warningHTML + (data.total > 0 ? tableHTML : emptyMsg) + autoHTML;
+        }
+
+        async function runTest() {
+            const btn = document.getElementById('testBtn');
+            const bar = document.getElementById('healthBar');
+            btn.disabled = true;
+            btn.textContent = 'TESTING...';
+            bar.classList.add('visible');
+            bar.innerHTML = '<span class="spinner"></span> Running checks...';
+
+            try {
+                const res = await fetch(`${API}?action=test-pipeline`);
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error || 'API error');
+
+                bar.innerHTML = data.checks.map(c => `
+                    <span class="health-pill ${c.pass ? 'pass' : 'fail'}">
+                        <span class="icon">${c.pass ? '\u2713' : '\u2717'}</span>
+                        ${esc(c.name)}: ${esc(c.detail)}
+                    </span>
+                `).join('');
+            } catch (err) {
+                bar.innerHTML = `<span class="health-pill fail"><span class="icon">\u2717</span> Test failed: ${esc(err.message)}</span>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'TEST EVERYTHING';
+            }
+        }
+
+        function esc(str) {
+            const el = document.createElement('span');
+            el.textContent = str;
+            return el.innerHTML;
+        }
+
+        // Initial load
+        loadStats();
+    </script>
+</body>
+</html>

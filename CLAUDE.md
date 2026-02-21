@@ -49,7 +49,7 @@ switchback-qualifier/
 ## Content Sources
 
 All content inputs live in the Obsidian project folder:
-`/Users/ramonbloomberg/Dropbox/writing/OBSIDIAN FOLDER/LEAD FUNNEL BOT/`
+`/Users/ramonbloomberg/Dropbox/OBSIDIAN FOLDER/!AGENT MACRO/LEAD FUNNEL BOT/`
 
 - Blurb and excerpt text: `SwitchBack excerpt and Blurb.md`
 - Project spec: `Agent Micro - Reader Funnel — Qualifier Test.md`

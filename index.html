@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Back — A Tom Keeler Novella | Jack Lively</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Playfair+Display:wght@700;900&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d1f2d;
+            color: #d4dce4;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 30px 60px;
+        }
+
+        /* ── Header ── */
+        .site-header {
+            text-align: center;
+            padding: 20px 0 50px;
+        }
+
+        .site-header img {
+            max-width: 480px;
+            width: 100%;
+            height: auto;
+        }
+
+        /* ── Hero: cover + intro ── */
+        .hero {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+            margin-bottom: 60px;
+        }
+
+        .hero-cover {
+            flex: 0 0 380px;
+        }
+
+        .hero-cover img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #3fa7d6;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            margin-bottom: 16px;
+            color: #c8d4de;
+        }
+
+        .hero-text p strong {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .hero-text .tagline {
+            font-style: italic;
+            color: #8ab4c8;
+            margin-top: 24px;
+        }
+
+        /* ── Excerpt section ── */
+        .excerpt-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 50px;
+            margin-bottom: 60px;
+        }
+
+        .excerpt-section .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            color: #3fa7d6;
+            margin-bottom: 8px;
+        }
+
+        .excerpt-section .section-sublabel {
+            font-size: 0.95rem;
+            color: #6b8fa3;
+            margin-bottom: 40px;
+            letter-spacing: 0.03em;
+        }
+
+        .excerpt-text {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .excerpt-text p {
+            margin-bottom: 20px;
+            text-indent: 0;
+            color: #c8d4de;
+        }
+
+        .excerpt-text p:first-child::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 8px;
+            margin-top: 6px;
+            color: #ffffff;
+        }
+
+        /* ── Signup section ── */
+        .signup-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 50px;
+            text-align: center;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .signup-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .signup-section .signup-sub {
+            color: #8ab4c8;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .signup-form {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .signup-form input[type="email"] {
+            flex: 1;
+            min-width: 240px;
+            padding: 14px 18px;
+            font-size: 1rem;
+            font-family: 'Source Sans 3', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .signup-form input[type="email"]::placeholder {
+            color: #6b8fa3;
+        }
+
+        .signup-form input[type="email"]:focus {
+            border-color: #3fa7d6;
+        }
+
+        .signup-form button {
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #ffffff;
+            background-color: #1a6b8a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .signup-form button:hover {
+            background-color: #238aad;
+        }
+
+        .signup-form button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .signup-message {
+            margin-top: 16px;
+            font-size: 0.95rem;
+            min-height: 1.4em;
+        }
+
+        .signup-message.success {
+            color: #5cc98e;
+        }
+
+        .signup-message.error {
+            color: #e07070;
+        }
+
+        .privacy-note {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #4a6a7a;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .hero-cover {
+                flex: none;
+                width: 260px;
+            }
+
+            .site-header h1 {
+                font-size: 2rem;
+            }
+
+            .hero-text h2 {
+                font-size: 1.5rem;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
+            .page-wrapper {
+                padding: 24px 20px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <img src="images/jack-lively-logo.webp" alt="Jack Lively Books">
+        </header>
+
+        <!-- Hero: Cover + Intro -->
+        <section class="hero">
+            <div class="hero-cover">
+                <img src="images/switch-back-cover.jpg" alt="Switch Back — A Tom Keeler Novella by Jack Lively">
+            </div>
+            <div class="hero-text">
+                <h2>SWITCH BACK</h2>
+                <p>It's been two years since Tom Keeler left the military, but a combat medic never forgets his pilot. So, when he hears that Mallory's got terminal brain cancer, Keeler drops everything to see her one last time. But then he runs into a beautiful journalist, who's trying to escape cartel assassins out to kill her.</p>
+                <p>Keeler's up for the challenge, but he can't get Mallory or her family involved, because the cartels never forget. So he's got to compartmentalize. On one hand there's a woman who's life needs saving. On the other, an old buddy who's life can't be saved.</p>
+                <p>And this is Texas, on the hottest day of the hottest month of the hottest year that anyone can remember.</p>
+                <p class="tagline">A Tom Keeler novella. Read the opening chapter below — then get the full book free.</p>
+            </div>
+        </section>
+
+        <!-- Excerpt -->
+        <section class="excerpt-section">
+            <p class="section-label">Chapter One</p>
+            <p class="section-sublabel">FROM SWITCH BACK BY JACK LIVELY</p>
+
+            <div class="excerpt-text">
+                <p>Buzzards swept out of the big desert sky. The birds had been cruising for a few minutes. When they came down, I knew that something out there was dead.</p>
+
+                <p>I was about a half mile away, walking off track, boots crunching on rocks and the hard plants that grow there. The buzzards were black specks in the sky. It was hot, maybe the hottest day of the year. I was in Big Bend National Park, Texas, a stone's throw from the Mexican border. It took me around ten minutes to get into the hills. I was sweating hard by the time I clambered up the valley to a hillside pocked with shaded crevices.</p>
+
+                <p>I found the body wedged between boulders at the entrance to a shallow overhang. There were around two dozen buzzards on the corpse. The birds scattered when I approached, but stuck around, waiting for the chance to get back in there.</p>
+
+                <p>The dead guy had survived into his thirties. It looked as though death had come as a major surprise. His mouth was gaping, the eyes open wide. The color had gone out of him already, so his skin was pasty and yellow. Flies buzzed around an exposed wound on his head and in and out of his mouth and nostrils, settling down on his eyeballs.</p>
+
+                <p>I squatted down to inspect the wound.</p>
+
+                <p>The skull was fractured and the broken bone was pushed inward. But the broken off pieces had fragmented after the first impact, which meant repeated blows. This was not an accidental death. The guy had not fallen onto his head from a cliff. Neither had he been pushed out of an airplane. No giant had picked him up and flung him down to earth. He had been murdered. Recently. The blood was sticky, not yet dry. Straight black hair was still plastered to his head with sweat. The buzzards had only just begun to feed.</p>
+
+                <p>A couple of feet away from the body was a black baseball cap with an embroidered Chihuahua on the front. I figured it had gotten knocked off when his skull was caved in by someone holding the bloodied, grapefruit-sized rock at rest near the body. I looked at the murder weapon and pictured the hand that had held it. It occurred to me that the person to whom that hand belonged was still around. So, I stood up straight, took a good look around and called out, "Hello," and then, "Hola." But the only thing I got in return was my own voice, echoed back by the stubborn hillside.</p>
+            </div>
+        </section>
+
+        <!-- Signup -->
+        <section class="signup-section">
+            <h3>Want to find out what happens next?</h3>
+            <p class="signup-sub">Get the full novella free — delivered straight to your inbox.</p>
+
+            <form class="signup-form" id="signupForm">
+                <input type="email" id="emailInput" placeholder="Your email address" required autocomplete="email">
+                <button type="submit" id="submitBtn">GET THE BOOK</button>
+            </form>
+            <p class="signup-message" id="signupMessage"></p>
+            <p class="privacy-note">No spam. Unsubscribe anytime.</p>
+        </section>
+
+    </div>
+
+    <script>
+        // MailerLite integration placeholder
+        // The other agent will wire this to the MailerLite API with the qualifier tag.
+        // For now: logs to console locally, ready for API endpoint swap.
+
+        const form = document.getElementById('signupForm');
+        const emailInput = document.getElementById('emailInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const message = document.getElementById('signupMessage');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            if (!email) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'SENDING...';
+            message.textContent = '';
+            message.className = 'signup-message';
+
+            try {
+                // TODO: Replace with MailerLite API call + qualifier tag
+                // Example endpoint: https://connect.mailerlite.com/api/subscribers
+                console.log('[Qualifier Signup] Email submitted:', email);
+
+                // Simulate success for local testing
+                message.textContent = "You're in! Check your inbox for Switch Back.";
+                message.className = 'signup-message success';
+                emailInput.value = '';
+            } catch (err) {
+                console.error('[Qualifier Signup] Error:', err);
+                message.textContent = 'Something went wrong. Please try again.';
+                message.className = 'signup-message error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'GET THE BOOK';
+            }
+        });
+    </script>
+</body>
+</html>

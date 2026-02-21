@@ -337,16 +337,23 @@
             message.className = 'signup-message';
 
             try {
-                // TODO: Replace with MailerLite API call + qualifier tag
-                // Example endpoint: https://connect.mailerlite.com/api/subscribers
-                console.log('[Qualifier Signup] Email submitted:', email);
+                const response = await fetch('/.netlify/functions/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
 
-                // Simulate success for local testing
-                message.textContent = "You're in! Check your inbox for Switch Back.";
-                message.className = 'signup-message success';
-                emailInput.value = '';
+                const data = await response.json();
+
+                if (data.success) {
+                    message.textContent = "You're in! Check your inbox for Switch Back.";
+                    message.className = 'signup-message success';
+                    emailInput.value = '';
+                } else {
+                    message.textContent = 'Something went wrong. Please try again.';
+                    message.className = 'signup-message error';
+                }
             } catch (err) {
-                console.error('[Qualifier Signup] Error:', err);
                 message.textContent = 'Something went wrong. Please try again.';
                 message.className = 'signup-message error';
             } finally {

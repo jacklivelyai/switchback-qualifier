@@ -72,12 +72,7 @@ function aggregateStats(subscribers) {
 
 // ?action=stats handler
 async function handleStats(apiKey) {
-  // Fetch subscribers and automation in parallel, but don't let automation failure crash everything
-  const [subscribers, automationResult] = await Promise.all([
-    fetchAllSubscribers(apiKey),
-    fetchAutomation(apiKey).catch(err => ({ error: err.message }))
-  ]);
-
+  const subscribers = await fetchAllSubscribers(apiKey);
   const variants = aggregateStats(subscribers);
   const total = subscribers.length;
 
@@ -91,39 +86,6 @@ async function handleStats(apiKey) {
       clicked: data.clicked,
       openRate: data.sent > 0 ? ((data.opened / data.sent) * 100).toFixed(1) : '0.0',
       clickRate: data.sent > 0 ? ((data.clicked / data.sent) * 100).toFixed(1) : '0.0'
-    };
-  }
-
-  // Build automation block — gracefully handle unavailable
-  let automationData;
-  if (automationResult.error) {
-    automationData = {
-      name: 'LVL 01 QUALIFIER - SWITCHBACK',
-      unavailable: true,
-      error: automationResult.error,
-      enabled: false, broken: false,
-      sent: 0, opens: 0, clicks: 0, openRate: '0.0', clickRate: '0.0',
-      queue_count: 0, completed_count: 0, emails_count: 0
-    };
-  } else {
-    const automation = automationResult.data || automationResult;
-    automationData = {
-      name: automation.name || 'Unknown',
-      unavailable: false,
-      enabled: automation.enabled || false,
-      broken: automation.broken || false,
-      emails_count: automation.emails_count || 0,
-      queue_count: automation.stats?.queue_count || 0,
-      completed_count: automation.stats?.completed_count || 0,
-      sent: automation.stats?.sent_count || 0,
-      opens: automation.stats?.open_count || 0,
-      clicks: automation.stats?.click_count || 0,
-      openRate: (automation.stats?.sent_count > 0)
-        ? ((automation.stats.open_count / automation.stats.sent_count) * 100).toFixed(1)
-        : '0.0',
-      clickRate: (automation.stats?.sent_count > 0)
-        ? ((automation.stats.click_count / automation.stats.sent_count) * 100).toFixed(1)
-        : '0.0'
     };
   }
 
@@ -144,7 +106,6 @@ async function handleStats(apiKey) {
     body: JSON.stringify({
       total,
       variants: variantSummary,
-      automation: automationData,
       recentSignups,
       fetchedAt: new Date().toISOString()
     })

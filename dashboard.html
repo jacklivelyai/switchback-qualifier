@@ -261,71 +261,6 @@
             text-align: right;
         }
 
-        /* Automation card */
-        .auto-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 20px 24px;
-            margin-bottom: 28px;
-        }
-
-        .auto-card .auto-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .badge.active {
-            background: rgba(92, 201, 142, 0.15);
-            color: #5cc98e;
-        }
-
-        .badge.disabled {
-            background: rgba(224, 112, 112, 0.15);
-            color: #e07070;
-        }
-
-        .badge.broken {
-            background: rgba(224, 112, 112, 0.25);
-            color: #ff6b6b;
-        }
-
-        .auto-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-        }
-
-        .auto-stat {
-            text-align: center;
-        }
-
-        .auto-stat .stat-val {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .auto-stat .stat-label {
-            font-size: 0.75rem;
-            color: #6b8fa3;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
         /* Warning */
         .warning {
             display: none;
@@ -584,68 +519,12 @@
                     </div>`;
             }
 
-            // Automation card
-            const a = data.automation;
-            let autoHTML = '';
-
-            if (a.unavailable) {
-                autoHTML = `
-                    <div class="section-title">Automation</div>
-                    <div class="auto-card">
-                        <div class="auto-header">
-                            <span class="badge disabled">Unavailable</span>
-                            <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
-                        </div>
-                        <p class="auto-unavailable">Could not fetch automation data from MailerLite (${esc(a.error)}). Check if the automation was recreated with a new ID.</p>
-                    </div>`;
-            } else {
-                let statusBadge = '';
-                if (a.broken) {
-                    statusBadge = '<span class="badge broken">Broken</span>';
-                } else if (a.enabled) {
-                    statusBadge = '<span class="badge active">Active</span>';
-                } else {
-                    statusBadge = '<span class="badge disabled">Disabled</span>';
-                }
-
-                autoHTML = `
-                    <div class="section-title">Automation</div>
-                    <div class="auto-card">
-                        <div class="auto-header">
-                            ${statusBadge}
-                            <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
-                        </div>
-                        <div class="auto-stats">
-                            <div class="auto-stat">
-                                <div class="stat-val">${a.sent}</div>
-                                <div class="stat-label">Emails Sent</div>
-                            </div>
-                            <div class="auto-stat">
-                                <div class="stat-val">${a.openRate}%</div>
-                                <div class="stat-label">Open Rate</div>
-                            </div>
-                            <div class="auto-stat">
-                                <div class="stat-val">${a.clickRate}%</div>
-                                <div class="stat-label">Click Rate</div>
-                            </div>
-                            <div class="auto-stat">
-                                <div class="stat-val">${a.queue_count}</div>
-                                <div class="stat-label">In Queue</div>
-                            </div>
-                            <div class="auto-stat">
-                                <div class="stat-val">${a.completed_count}</div>
-                                <div class="stat-label">Completed</div>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-
             let emptyMsg = '';
             if (data.total === 0) {
                 emptyMsg = '<div class="loading">No subscribers yet. Stats will appear once signups start coming in.</div>';
             }
 
-            content.innerHTML = cardsHTML + warningHTML + (data.total > 0 ? tableHTML : emptyMsg) + signupsHTML + autoHTML;
+            content.innerHTML = cardsHTML + warningHTML + (data.total > 0 ? tableHTML : emptyMsg) + signupsHTML;
         }
 
         async function runTest() {

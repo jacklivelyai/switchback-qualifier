@@ -342,6 +342,13 @@
             display: block;
         }
 
+        /* Unavailable automation */
+        .auto-unavailable {
+            color: #6b8fa3;
+            font-size: 0.85rem;
+            padding: 8px 0;
+        }
+
         /* Footer */
         .dash-footer {
             text-align: center;
@@ -541,54 +548,104 @@
                     </div>`;
             }
 
-            // Automation card
-            const a = data.automation;
-            let statusBadge = '';
-            if (a.broken) {
-                statusBadge = '<span class="badge broken">Broken</span>';
-            } else if (a.enabled) {
-                statusBadge = '<span class="badge active">Active</span>';
-            } else {
-                statusBadge = '<span class="badge disabled">Disabled</span>';
+            // Subscriber list
+            let signupsHTML = '';
+            if (data.recentSignups && data.recentSignups.length > 0) {
+                signupsHTML = `
+                    <div class="section-title">Recent Signups</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Variant</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                for (const s of data.recentSignups) {
+                    const d = new Date(s.date);
+                    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                        + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    signupsHTML += `
+                                <tr>
+                                    <td>${esc(s.email)}</td>
+                                    <td>${s.variant ? esc(s.variant) : '<span style="color:#6b8fa3">none</span>'}</td>
+                                    <td>${esc(dateStr)}</td>
+                                    <td>${esc(s.status)}</td>
+                                </tr>`;
+                }
+
+                signupsHTML += `
+                            </tbody>
+                        </table>
+                    </div>`;
             }
 
-            const autoHTML = `
-                <div class="section-title">Automation</div>
-                <div class="auto-card">
-                    <div class="auto-header">
-                        ${statusBadge}
-                        <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
-                    </div>
-                    <div class="auto-stats">
-                        <div class="auto-stat">
-                            <div class="stat-val">${a.sent}</div>
-                            <div class="stat-label">Emails Sent</div>
+            // Automation card
+            const a = data.automation;
+            let autoHTML = '';
+
+            if (a.unavailable) {
+                autoHTML = `
+                    <div class="section-title">Automation</div>
+                    <div class="auto-card">
+                        <div class="auto-header">
+                            <span class="badge disabled">Unavailable</span>
+                            <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
                         </div>
-                        <div class="auto-stat">
-                            <div class="stat-val">${a.openRate}%</div>
-                            <div class="stat-label">Open Rate</div>
+                        <p class="auto-unavailable">Could not fetch automation data from MailerLite (${esc(a.error)}). Check if the automation was recreated with a new ID.</p>
+                    </div>`;
+            } else {
+                let statusBadge = '';
+                if (a.broken) {
+                    statusBadge = '<span class="badge broken">Broken</span>';
+                } else if (a.enabled) {
+                    statusBadge = '<span class="badge active">Active</span>';
+                } else {
+                    statusBadge = '<span class="badge disabled">Disabled</span>';
+                }
+
+                autoHTML = `
+                    <div class="section-title">Automation</div>
+                    <div class="auto-card">
+                        <div class="auto-header">
+                            ${statusBadge}
+                            <span style="color: #8ab4c8; font-size: 0.9rem;">${esc(a.name)}</span>
                         </div>
-                        <div class="auto-stat">
-                            <div class="stat-val">${a.clickRate}%</div>
-                            <div class="stat-label">Click Rate</div>
+                        <div class="auto-stats">
+                            <div class="auto-stat">
+                                <div class="stat-val">${a.sent}</div>
+                                <div class="stat-label">Emails Sent</div>
+                            </div>
+                            <div class="auto-stat">
+                                <div class="stat-val">${a.openRate}%</div>
+                                <div class="stat-label">Open Rate</div>
+                            </div>
+                            <div class="auto-stat">
+                                <div class="stat-val">${a.clickRate}%</div>
+                                <div class="stat-label">Click Rate</div>
+                            </div>
+                            <div class="auto-stat">
+                                <div class="stat-val">${a.queue_count}</div>
+                                <div class="stat-label">In Queue</div>
+                            </div>
+                            <div class="auto-stat">
+                                <div class="stat-val">${a.completed_count}</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
                         </div>
-                        <div class="auto-stat">
-                            <div class="stat-val">${a.queue_count}</div>
-                            <div class="stat-label">In Queue</div>
-                        </div>
-                        <div class="auto-stat">
-                            <div class="stat-val">${a.completed_count}</div>
-                            <div class="stat-label">Completed</div>
-                        </div>
-                    </div>
-                </div>`;
+                    </div>`;
+            }
 
             let emptyMsg = '';
             if (data.total === 0) {
                 emptyMsg = '<div class="loading">No subscribers yet. Stats will appear once signups start coming in.</div>';
             }
 
-            content.innerHTML = cardsHTML + warningHTML + (data.total > 0 ? tableHTML : emptyMsg) + autoHTML;
+            content.innerHTML = cardsHTML + warningHTML + (data.total > 0 ? tableHTML : emptyMsg) + signupsHTML + autoHTML;
         }
 
         async function runTest() {

@@ -72,12 +72,12 @@ function aggregateStats(subscribers) {
 
 // ?action=stats handler
 async function handleStats(apiKey) {
-  const [subscribers, automationRes] = await Promise.all([
+  // Fetch subscribers and automation in parallel, but don't let automation failure crash everything
+  const [subscribers, automationResult] = await Promise.all([
     fetchAllSubscribers(apiKey),
-    fetchAutomation(apiKey)
+    fetchAutomation(apiKey).catch(err => ({ error: err.message }))
   ]);
 
-  const automation = automationRes.data || automationRes;
   const variants = aggregateStats(subscribers);
   const total = subscribers.length;
 
@@ -94,30 +94,58 @@ async function handleStats(apiKey) {
     };
   }
 
+  // Build automation block — gracefully handle unavailable
+  let automationData;
+  if (automationResult.error) {
+    automationData = {
+      name: 'LVL 01 QUALIFIER - SWITCHBACK',
+      unavailable: true,
+      error: automationResult.error,
+      enabled: false, broken: false,
+      sent: 0, opens: 0, clicks: 0, openRate: '0.0', clickRate: '0.0',
+      queue_count: 0, completed_count: 0, emails_count: 0
+    };
+  } else {
+    const automation = automationResult.data || automationResult;
+    automationData = {
+      name: automation.name || 'Unknown',
+      unavailable: false,
+      enabled: automation.enabled || false,
+      broken: automation.broken || false,
+      emails_count: automation.emails_count || 0,
+      queue_count: automation.stats?.queue_count || 0,
+      completed_count: automation.stats?.completed_count || 0,
+      sent: automation.stats?.sent_count || 0,
+      opens: automation.stats?.open_count || 0,
+      clicks: automation.stats?.click_count || 0,
+      openRate: (automation.stats?.sent_count > 0)
+        ? ((automation.stats.open_count / automation.stats.sent_count) * 100).toFixed(1)
+        : '0.0',
+      clickRate: (automation.stats?.sent_count > 0)
+        ? ((automation.stats.click_count / automation.stats.sent_count) * 100).toFixed(1)
+        : '0.0'
+    };
+  }
+
+  // Build recent signups list (most recent first, cap at 50)
+  const recentSignups = subscribers
+    .sort((a, b) => new Date(b.subscribed_at || b.created_at) - new Date(a.subscribed_at || a.created_at))
+    .slice(0, 50)
+    .map(sub => ({
+      email: sub.email,
+      variant: sub.fields?.ad_variant || null,
+      date: sub.subscribed_at || sub.created_at,
+      status: sub.status
+    }));
+
   return {
     statusCode: 200,
     headers,
     body: JSON.stringify({
       total,
       variants: variantSummary,
-      automation: {
-        name: automation.name || 'Unknown',
-        enabled: automation.enabled || false,
-        broken: automation.broken || false,
-        stats: automation.stats || {},
-        emails_count: automation.emails_count || 0,
-        queue_count: automation.stats?.queue_count || 0,
-        completed_count: automation.stats?.completed_count || 0,
-        sent: automation.stats?.sent_count || 0,
-        opens: automation.stats?.open_count || 0,
-        clicks: automation.stats?.click_count || 0,
-        openRate: (automation.stats?.sent_count > 0)
-          ? ((automation.stats.open_count / automation.stats.sent_count) * 100).toFixed(1)
-          : '0.0',
-        clickRate: (automation.stats?.sent_count > 0)
-          ? ((automation.stats.click_count / automation.stats.sent_count) * 100).toFixed(1)
-          : '0.0'
-      },
+      automation: automationData,
+      recentSignups,
       fetchedAt: new Date().toISOString()
     })
   };

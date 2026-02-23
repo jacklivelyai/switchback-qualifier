@@ -49,11 +49,11 @@
         /* ── Header ── */
         .site-header {
             text-align: center;
-            padding: 20px 0 50px;
+            padding: 20px 0 30px;
         }
 
         .site-header img {
-            max-width: 480px;
+            max-width: 320px;
             width: 100%;
             height: auto;
         }
@@ -61,13 +61,13 @@
         /* ── Hero: cover + intro ── */
         .hero {
             display: flex;
-            gap: 50px;
-            align-items: flex-start;
-            margin-bottom: 60px;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
         .hero-cover {
-            flex: 0 0 380px;
+            flex: 0 0 100px;
         }
 
         .hero-cover img {
@@ -85,25 +85,14 @@
         .hero-text h2 {
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #3fa7d6;
-            margin-bottom: 20px;
+            margin-bottom: 4px;
         }
 
-        .hero-text p {
-            margin-bottom: 16px;
-            color: #c8d4de;
-        }
-
-        .hero-text p strong {
-            color: #ffffff;
-            font-weight: 700;
-        }
-
-        .hero-text .tagline {
-            font-style: italic;
+        .hero-text .subtitle {
             color: #8ab4c8;
-            margin-top: 24px;
+            font-size: 1rem;
         }
 
         /* ── Excerpt section ── */
@@ -252,23 +241,12 @@
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-                align-items: center;
-                gap: 30px;
-            }
-
             .hero-cover {
-                flex: none;
-                width: 260px;
-            }
-
-            .site-header h1 {
-                font-size: 2rem;
+                flex: 0 0 80px;
             }
 
             .hero-text h2 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
 
             body {
@@ -296,10 +274,7 @@
             </div>
             <div class="hero-text">
                 <h2>SWITCH BACK</h2>
-                <p>It's been two years since Tom Keeler left the military, but a combat medic never forgets his pilot. So, when he hears that Mallory's got terminal brain cancer, Keeler drops everything to see her one last time. But then he runs into a beautiful journalist, who's trying to escape cartel assassins out to kill her.</p>
-                <p>Keeler's up for the challenge, but he can't get Mallory or her family involved, because the cartels never forget. So he's got to compartmentalize. On one hand there's a woman who's life needs saving. On the other, an old buddy who's life can't be saved.</p>
-                <p>And this is Texas, on the hottest day of the hottest month of the hottest year that anyone can remember.</p>
-                <p class="tagline">A Tom Keeler novella. Read the opening chapter below — then get the full book free.</p>
+                <p class="subtitle">A Tom Keeler Novella · Read the opening chapter</p>
             </div>
         </section>
 
